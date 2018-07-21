@@ -1,0 +1,12 @@
+.nav-color{
+    background: linear-gradient(141deg, #0fb8ad 0%, #1fc8db  51%, #2cb5e8 75%);
+}
+.margin-top{
+    margin-top: 10px;
+}
+.margin-left{
+    margin-left: 10px;
+}
+.list-group-item a:hover {
+    text-decoration: none;
+}

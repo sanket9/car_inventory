@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Car Inventory</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" ></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" ></script>
+
+</head>
+<body>
+    <section>
+        <nav class="navbar navbar-expand-lg navbar-light nav-color">
+            <div class="container">
+                <a class="navbar-brand text-light" href="#">Car Inventory</a>
+
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                
+            </div>
+        </nav>
+    </section>
+    <section>
+        <div class="container">
+            <div class="row">                
+                <div class="col-md-6">
+                    <div role="alert" id="alert" style="display: none; margin-top: 15px">
+                        
+                    </div>
+
+                    <form id="main-form">
+                        <div class="form-group">
+                            <label for="add">Add Car Company Name</label>
+                            <input type="text" class="form-control" id="name" placeholder="Enter The Company Name">
+                            <div class="invalid-feedback" id="error">
+                                    Enter A valid Name
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        
+        const form = document.getElementById('main-form');
+
+        form.addEventListener('submit', formSubmited)
+        var url = 'http://localhost/car_inventory/db/cars.php?op=add_manufacturer'
+        function formSubmited(event) {
+            event.preventDefault();
+            var name = document.getElementById('name').value;
+            if(name == '' || name == null){
+                $('#error').show();
+                $('#name').addClass('is-invalid');
+                $('#name').focus();
+            }else{
+                fetch(url, {
+                method: 'POST',
+                headers: {                
+                    'Content-Type': 'text/plain'
+                },
+                body: JSON.stringify({name: name})
+                }).then(result => result.json()).then(data=>{
+                    // console.log(data);
+                    if(data.status == 1){
+                        $('#alert').show().addClass('alert alert-success').html(data.msg+' <a href="addmodel.html">Go to Addmodel</a>');
+                    }else{
+                        $('#alert').show().addClass('alert alert-danger').html(data.msg);
+                    }
+                })
+            }
+            
+                
+            
+
+        }
+    </script>
+</body>
+</html>
