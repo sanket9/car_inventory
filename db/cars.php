@@ -40,13 +40,14 @@
 
 	function add_model($conn)
 	{
+		header('Access-Control-Allow-Origin: *');  
 		$json = (file_get_contents('php://input'));
 		$data = json_decode($json, TRUE);
 		$car_company_id	 = $data['car_company_id'];
 		$model_name	 = $data['model_name'];
 		$no_of_model	 = $data['no_of_model'];
-		$sql = "INSERT INTO car_model_name (car_company_id, model_name, no_of_model, created) 
-				VALUES ('$car_company_id','$model_name', '$no_of_model' now())";
+		
+		$sql = "INSERT INTO car_model_name (car_company_id, model_name, no_of_model, created) VALUES ('$car_company_id','$model_name', '$no_of_model', now())";
 		if ($conn->query($sql) === TRUE) {
 			$output['status'] = 1;
 			$output['msg'] = 'New record created successfully.';
@@ -58,6 +59,7 @@
 	}
 	function update_model($conn)
 	{
+		header('Access-Control-Allow-Origin: *');  
 		$id = $_GET['id'];
  		$sql = "UPDATE car_model_name SET no_of_model='$id' ";
 		if ($conn->query($sql) === TRUE) {
