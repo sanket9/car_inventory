@@ -15,6 +15,9 @@
 		case "get_model":
 				get_model($conn);
 			break;
+		case "get_all_data":
+				get_all_data($conn);
+			break;
 	    default:
         	echo "Your favorite color is neither red, blue, nor green!";
 	}
@@ -61,11 +64,29 @@
 	{
 		header('Access-Control-Allow-Origin: *');  
 		$id = $_GET['id'];
- 		$sql = "UPDATE car_model_name SET no_of_model='$id' ";
+ 		$sql = "UPDATE car_model_name SET no_of_model= no_of_model - 1 WHERE id = '$id'";
 		if ($conn->query($sql) === TRUE) {
 			$output['status'] = 1;
-			$output['msg'] = 'New record created successfully.';
+			$output['msg'] = 'data Updated successfully.';
 		    echo json_encode($output);
+		} else {
+			$output['status'] = 1;
+			$output['msg'] = 'Error.';
+		}
+	}
+	function get_all_data($conn)
+	{
+		header('Access-Control-Allow-Origin: *');  
+ 		$sql = "SELECT * FROM car_company LEFT JOIN car_model_name ON car_model_name.car_company_id = car_company.id ORDER BY `car_model_name`.`id` DESC";
+		$result = $conn->query($sql);
+		$new_arry = array();
+		if ($result->num_rows > 0) {
+			// output data of each row
+			while($row = $result->fetch_assoc()) {
+				array_push($new_arry, $row);
+				
+			}
+			echo json_encode($new_arry);
 		} else {
 			$output['status'] = 1;
 			$output['msg'] = 'Error.';

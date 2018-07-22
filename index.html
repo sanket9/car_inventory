@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Car Inventory</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" ></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" ></script>
+
+</head>
+<body>
+    <section>
+        <nav class="navbar navbar-expand-lg navbar-light nav-color">
+            <div class="container">
+                <a class="navbar-brand text-light" href="#">Car Inventory</a>
+
+
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                
+            </div>
+        </nav>
+    </section>
+    <section>
+        <div class="container">
+            <div class="row">   
+                <table class="table table-hover" id="data_table">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Model Name</th>
+                        <th scope="col">Company Name</th>
+                        <th scope="col">No of Model</th>
+                        <th scope="col">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tbody">
+                        <tr class="gradeX" id="result">
+                                        
+                                       
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        
+        const form = document.getElementById('main-form');
+        getName();
+        function sold(id) {
+            var no_of_model = $('#no_model'+id).text();
+            if(no_of_model != 0){               
+                var url = 'http://localhost/car_inventory/db/cars.php?op=update_model&id='+id
+                fetch(url).then(res => res.json()).then(data=>{
+                    if(data.status == 1){
+                        no_of_model = parseInt(no_of_model)-1;
+                        $('#no_model'+id).text(no_of_model);
+                    }else{
+                        alert('ERROR.....')
+                    }
+                    
+                },err=>{
+                    console.log(err);
+                })
+
+            }else{
+                alert('All Sold. Add More Models')
+            }           
+        }
+
+        function getName() {
+            var url = 'http://localhost/car_inventory/db/cars.php?op=get_all_data'
+            fetch(url).then(res => res.json()).then(data=>{
+                showResults(data);
+            },err=>{
+                console.log(err);
+            })
+        }
+        function showResults(results) {
+            var table = document.getElementById('data_table');
+            let i = 1;
+            if(results[i].car_company_id > 0){
+                
+                results.forEach(result=>{
+                
+                    var row = table.insertRow(-1);
+                    var cell1 = row.insertCell(0);
+                    var cell2 = row.insertCell(1);
+                    var cell3 = row.insertCell(2);
+                    var cell4 = row.insertCell(3);
+                    var cell5 = row.insertCell(4);
+                    cell1.innerHTML = i;
+                    cell2.innerHTML = result.model_name
+                    cell3.innerHTML = result.name;
+                    cell4.innerHTML = result.no_of_model;
+                    cell4.setAttribute("id", "no_model"+result.id);
+                    cell5.innerHTML = '<button type="button" class="btn btn-sm btn-outline-dark" onclick="sold('+result.id+')">Sold</button>';
+                    i++;
+                })
+            }else{
+                var row = table.insertRow(-1);
+                var cell1 = row.insertCell(0);
+                cell1.innerHTML = 'No Record Found';
+            }
+            
+        }
+
+    </script>
+</body>
+</html>
